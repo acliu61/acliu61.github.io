@@ -1,0 +1,24 @@
+.sideBar {
+    height: 100%;
+    width: 230px;
+    position: fixed;
+    background-color: rgba(68, 64, 94, 0.467);
+    color: rgb(0, 0, 0)
+}
+.sideBarInner {
+    position: relative;
+    padding-top: 20px;
+    padding-left: 10%;
+}
+.mainPortion {
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.79);
+    margin-left: 230px;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
