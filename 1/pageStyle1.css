@@ -1,6 +1,6 @@
 .sideBar {
     height: 100%;
-    width: 230px;
+    width: 12%;
     position: fixed;
     background-color: rgba(68, 64, 94, 0.467);
     color: rgb(0, 0, 0)
@@ -13,12 +13,28 @@
 .mainPortion {
     position: fixed;
     background-color: rgba(255, 255, 255, 0.79);
-    margin-left: 230px;
+    margin-left: 12%;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
     height: 100%;
-    width: 100%;
+    width: 88%;
+    overflow-y: scroll;
+}
+.mainText {
+    position: relative;
+    padding-left: 30px;
+    font-size: 1vw;
 }
 
 body {
     margin: 0;
     padding: 0;
+}
+
+img {
+    width: 80%;
+    max-width: 80%;
+    height: auto;
+    position: relative;
 }
