@@ -34,7 +34,7 @@ body {
 
 img {
     width: 80%;
-    max-width: 80%;
+    max-width: 800px;
     height: auto;
     position: relative;
 }

@@ -9,6 +9,8 @@
             <h2>Jump to Section</h2>
             <a href="#Introduction"> Introduction</a> <br>
             <a href="#SearchAlignment">Alignment By Search</a>
+            <a href="#SingleScaleTest">Search Algorithm Test</a>
+            <a href="#ImagePyramids">Image Pyramids</a>
         </div>
     </div>
     <div class = "mainPortion" id = "mainSection">
@@ -33,6 +35,35 @@
             Since the alignment on our cathedral image is fairly close, we can create good alignment by simply trying various displacements of the three negatives. We will exhaustively search over a <br>
             set window of displacements (between [-20,20] pixels in both horizontal and vertical directions) and score each one using the Normalized Cross-Correlation (the dot product between the two <br>
             normalized image vectors). We will then choose the displacement that gives us the best score, which ideally will be the displacement that give us good alignment between the three negatives.<br>
+
+            <p>Writing the Code:<br>
+            There is a very important subtlety within our exhaustive search criteria. When we assign a score to each displacement, we only want to consider the quality of alignment of the parts that overlap. <br>
+            So the Normalized Cross-Correlation is not computed between the entire images, but rather only the portion of the images that overlapped. Our algorithm will take this into consideration.</p>
+            <p>In order to see our results, we will also write a function to display the aligned images, using the displacement numbers given to us by our search algorithm. This function will not only align<br>
+            the three filters, but it will also crop the images so that only the intersection of the three filters is shown. This allows us to inspect specifically the part of the image that our <br>
+            search algorithm is optimizing. Once all this is done and we run our algorithm, we obtain the following:<br></p>
+            <img src="media/cathedralSearchAlignedUncropped.png" alt="Full Color Cathedral Image, Red and Green Aligned but Blue slightly misaligned"><br>
+            <p>We can now see a drastic improvement in alignment, however there are still clearly issues. There are still blue and yellow outlines where misalignments still exist. We can tell that our <br>
+                algorithm works because yellow is a combination of red and green, meaning our algorithm worked extremely well for the red and green negatives, but there were issues causing it to<br>
+                fail when aligning the blue and red negatives.This is most likely because the borders are causing noise for our algorithm. As we can see in the above image, there is a very large blue/black border<br>
+                 on the right that may be the cause of the blue misalignment. For now, we will manually crop off a 10 pixel border on all sides of the negatives and see if this yields an improvement:<br></p>
+            <img src="media/cathedralSearchAlignedCropped.png" alt="Full Color Cathedral Image, Perfectly Aligned, Borders Cropped"><br>
+            <p>Indeed, the misalignment of the blue negative was because of noise caused by the borders. Once we cropped the images, the red-green displacement stayed the same, but the red-blue displacement shifted <br>
+                by four pixels. As a result, we now have excellent alignment of the filters. Keeping this in mind, for the rest of the project we will manually crop the borders before running our algorithms.</p>
+
+
+            <h2 id="SingleScaleTest">3. Testing Our Single Scale Alignment Algorithm</h2>
+            <p>Now that we have a working single-scale alignment algorithm, let's see how it performs on some other images that have relatively small filesize. We will use our algorithm on the monastery and <br>
+            tobolsk images. Below is a side-by-side of the negatives, followed by the full-color images aligned by our algorithm.</p>
+            <img src="media/MonasteryTobolskSideBySide.png" alt="Side by Side of negatives for the monastery and tobolsk images">
+            <img src="media/MonasteryTobolskFullColor.png" alt="Full-Color Search Aligned Monastery and Tobolsk images">
+            <p> As we can see, our algorithm performs fantastically on both images. There are no visible alignment issues in either picture.</p>
+
+            <h2 id="ImagePyramids">4. Image Pyramids</h2>
+            <p>While our exhaustive search algorithm works very well for the relatively small pictures, for larger images exhaustive search is prohibitively expensive in runtime. Therefore, we will introduce a<br>
+            new algorithm that uses image pyramids to speed up the process. The image pyramids will store the negatives at many resolutions, from coarse to fine, and this algorithm will perform a single-scale<br>
+            displacement calculation at each layer. At the end, the displacements from each layer will be combined. The speedup from image pyramids should allow us to process the larger .tiff images. </p>
+
 
 
 
