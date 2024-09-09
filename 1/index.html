@@ -7,7 +7,8 @@
     <div class = "sideBar" id = "tableOfContents">
         <div class = "sideBarInner" id = "tableOfContentsInner">
             <h2>Jump to Section</h2>
-            <a href="#Intro"> Introduction</a>
+            <a href="#Introduction"> Introduction</a> <br>
+            <a href="#SearchAlignment">Alignment By Search</a>
         </div>
     </div>
     <div class = "mainPortion" id = "mainSection">
@@ -27,6 +28,11 @@
             <img style="text-align:center; width:50%" src="media/cathedralUnaligned.png" alt="Poorly aligned full-color photo of Cathedral"><br>
             <p>While we seem to get something resembling full-color, there are clearly many issues with this photo. First and most glaring is the alignment of the negatives is poor,<br>
             giving the image a blurry effect, and we can clearly see the overlaid copies of the image. For the first step of this project, we will focus on this alignment issue.</p>
+
+            <h2 id = "SearchAlignment">2. Alignment by Exhaustive Search</h2>
+            Since the alignment on our cathedral image is fairly close, we can create good alignment by simply trying various displacements of the three negatives. We will exhaustively search over a <br>
+            set window of displacements (between [-20,20] pixels in both horizontal and vertical directions) and score each one using the Normalized Cross-Correlation (the dot product between the two <br>
+            normalized image vectors). We will then choose the displacement that gives us the best score, which ideally will be the displacement that give us good alignment between the three negatives.<br>
 
 
 
