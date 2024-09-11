@@ -3,7 +3,7 @@
     width: 12%;
     position: fixed;
     background-color: rgba(68, 64, 94, 0.467);
-    color: rgb(0, 0, 0)
+    color: rgb(0, 0, 0);
 }
 .sideBarInner {
     position: relative;
@@ -37,4 +37,96 @@ img {
     max-width: 800px;
     height: auto;
     position: relative;
+    break-before:auto;
+    break-after:auto;
 }
+p{
+    break-before:auto;
+    break-after:auto;
+}
+/* This div code taken from W3Schools CSS tutorial
+https://www.w3schools.com/howto/howto_css_three_columns.asp*/
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .column {
+    width:30%;
+    float: left;
+    padding: 10px;
+  }
+
+  @media print {
+    #content,#page {
+        width: 100%; 
+        margin: 0; 
+        float: none;
+        }
+  .page{
+    break-before:always;
+  }
+
+  .sideBar {
+    display:none;
+    height: 100%;
+    width: 12%;
+    position: fixed;
+    background-color: rgba(68, 64, 94, 0.467);
+    color: rgb(0, 0, 0);
+}
+.sideBarInner {
+    display:none;
+    position: relative;
+    padding-top: 20px;
+    padding-left: 10%;
+}
+.mainPortion {
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.79);
+    margin-left: 12%;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    height: 100%;
+    width: 88%;
+    overflow-y: scroll;
+}
+.mainText {
+    position: relative;
+    padding-left: 30px;
+    font-size: 1vw;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    width: 80%;
+    max-width: 800px;
+    height: auto;
+    position: relative;
+    break-before:auto;
+    break-after:page;
+}
+p{
+    break-before:auto;
+    break-after:auto;
+}
+/* This div code taken from W3Schools CSS tutorial
+https://www.w3schools.com/howto/howto_css_three_columns.asp*/
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .column {
+    width:30%;
+    float: left;
+    padding: 10px;
+  }
+
+}
+

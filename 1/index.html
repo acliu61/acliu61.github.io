@@ -4,73 +4,303 @@
         <title> Project 1 Report</title>
         <link rel="stylesheet" href="pageStyle1.css">
     </head>
-    <div class = "sideBar" id = "tableOfContents">
-        <div class = "sideBarInner" id = "tableOfContentsInner">
-            <h2>Jump to Section</h2>
-            <a href="#Introduction"> Introduction</a> <br>
-            <a href="#SearchAlignment">Alignment By Search</a>
-            <a href="#SingleScaleTest">Search Algorithm Test</a>
-            <a href="#ImagePyramids">Image Pyramids</a>
+    <body style="width:100%;height:100%">
+        <div class = "sideBar" id = "tableOfContents">
+            <div class = "sideBarInner" id = "tableOfContentsInner">
+                <h2>Jump to Section</h2>
+                <a href="#Introduction"> Introduction</a> <br>
+                <a href="#SearchAlignment">Alignment By Search</a><br>
+                <a href="#SingleScaleTest">Search Algorithm Test</a> <br>
+                <a href="#ImagePyramids">Image Pyramids</a> <br>
+                <a href="#PyramidResults">Image Pyramid Results</a> <br>
+                <a href="#CroppingIssues2">Cropping Issues Again</a> <br>
+                <a href="#OtherExamples">Other Chosen Examples</a>
+                <a href="#Gallery">Gallery</a>
+            </div>
         </div>
-    </div>
-    <div class = "mainPortion" id = "mainSection">
-        <h1 style="margin-left: 15%; font-size: 2vw">Project 1: Colorizing the Prokudin-Gorskii Photo Collection</h1>
-        <div class = "mainText" id = "mainSectionInner">
-            <p style="text-align: center; margin-right:15%">By: Andi Liu</p>
-            <br>
-            <h2 id = "Introduction">1. Introduction</h2>
-            For this project, we are using a dataset of pictures taken by Sergei Mikhailovich Prokudin-Gorskii. Each picture is a set of three glass plate negatives, <br>
-            taken with three different color filters of Red, Green, and Blue. For this project we are taking the three negatives and combining them into a single color image.<br>
-            <p>To start, we can place the three negatives side by side to get an idea of what they look like. For now we will start with an image with smaller<br>
-            filesize, which is an image of a cathedral.</p>
-            <img src="media/cathedralBWallthree.png" alt="Black and White Negatives of Cathedral Image"><br>
-            <p>This is what the negatives look like with the red, green, and blue filters applied.</p>
-            <img src="media/cathedralRGBallthree.png" alt="Negatives of Cathedral Image with Red, Green, Blue filters, respectively"><br>
-            <p>Now let us see what happens if we naively overlay the three color-filtered negatives as they are.</p>
-            <img style="text-align:center; width:50%" src="media/cathedralUnaligned.png" alt="Poorly aligned full-color photo of Cathedral"><br>
-            <p>While we seem to get something resembling full-color, there are clearly many issues with this photo. First and most glaring is the alignment of the negatives is poor,<br>
-            giving the image a blurry effect, and we can clearly see the overlaid copies of the image. For the first step of this project, we will focus on this alignment issue.</p>
+        <div class = "mainPortion" id = "mainSection">
+            <h1 style="margin-left: 15%; font-size: 2vw">Project 1: Colorizing the Prokudin-Gorskii Photo Collection</h1>
+            <div class = "mainText" id = "mainSectionInner">
+                <p style="text-align: center; margin-right:15%">By: Andi Liu</p>
+                <br>
+                <h2 id = "Introduction">1. Introduction</h2>
+                <p>Note: Displacements for all the images are listed in the Gallery.</p>
+                For this project, we are using a dataset of pictures taken by Sergei Mikhailovich Prokudin-Gorskii. Each picture is a set of three glass plate negatives, <br>
+                taken with three different color filters of Red, Green, and Blue. For this project we are taking the three negatives and combining them into a single color image.<br>
+                <p>To start, we can place the three negatives side by side to get an idea of what they look like. For now we will start with an image with smaller<br>
+                filesize, which is an image of a cathedral.</p>
+                <img src="media/cathedralBWallthree.png" alt="Black and White Negatives of Cathedral Image"><br>
+                <p>This is what the negatives look like with the red, green, and blue filters applied.</p>
+                <img src="media/cathedralRGBallthree.png" alt="Negatives of Cathedral Image with Red, Green, Blue filters, respectively"><br>
+                <p>Now let us see what happens if we naively overlay the three color-filtered negatives as they are.</p>
+                <img style="text-align:center; width:50%" src="media/cathedralUnaligned.png" alt="Poorly aligned full-color photo of Cathedral"><br>
+                <p>While we seem to get something resembling full-color, there are clearly many issues with this photo. First and most glaring is the alignment of the negatives is poor,<br>
+                giving the image a blurry effect, and we can clearly see the overlaid copies of the image. For the first step of this project, we will focus on this alignment issue.</p>
 
-            <h2 id = "SearchAlignment">2. Alignment by Exhaustive Search</h2>
-            Since the alignment on our cathedral image is fairly close, we can create good alignment by simply trying various displacements of the three negatives. We will exhaustively search over a <br>
-            set window of displacements (between [-20,20] pixels in both horizontal and vertical directions) and score each one using the Normalized Cross-Correlation (the dot product between the two <br>
-            normalized image vectors). We will then choose the displacement that gives us the best score, which ideally will be the displacement that give us good alignment between the three negatives.<br>
+                <br class="page">
+                <h2 id = "SearchAlignment">2. Alignment by Exhaustive Search</h2>
+                Since the alignment on our cathedral image is fairly close, we can create good alignment by simply trying various displacements of the three negatives. We will exhaustively search over a <br>
+                set window of displacements (between [-20,20] pixels in both horizontal and vertical directions) and score each one using the Normalized Cross-Correlation (the dot product between the two <br>
+                normalized image vectors). We will then choose the displacement that gives us the best score, which ideally will be the displacement that give us good alignment between the three negatives.<br>
 
-            <p>Writing the Code:<br>
-            There is a very important subtlety within our exhaustive search criteria. When we assign a score to each displacement, we only want to consider the quality of alignment of the parts that overlap. <br>
-            So the Normalized Cross-Correlation is not computed between the entire images, but rather only the portion of the images that overlapped. Our algorithm will take this into consideration.</p>
-            <p>In order to see our results, we will also write a function to display the aligned images, using the displacement numbers given to us by our search algorithm. This function will not only align<br>
-            the three filters, but it will also crop the images so that only the intersection of the three filters is shown. This allows us to inspect specifically the part of the image that our <br>
-            search algorithm is optimizing. Once all this is done and we run our algorithm, we obtain the following:<br></p>
-            <img src="media/cathedralSearchAlignedUncropped.png" alt="Full Color Cathedral Image, Red and Green Aligned but Blue slightly misaligned"><br>
-            <p>We can now see a drastic improvement in alignment, however there are still clearly issues. There are still blue and yellow outlines where misalignments still exist. We can tell that our <br>
-                algorithm works because yellow is a combination of red and green, meaning our algorithm worked extremely well for the red and green negatives, but there were issues causing it to<br>
-                fail when aligning the blue and red negatives.This is most likely because the borders are causing noise for our algorithm. As we can see in the above image, there is a very large blue/black border<br>
-                 on the right that may be the cause of the blue misalignment. For now, we will manually crop off a 10 pixel border on all sides of the negatives and see if this yields an improvement:<br></p>
-            <img src="media/cathedralSearchAlignedCropped.png" alt="Full Color Cathedral Image, Perfectly Aligned, Borders Cropped"><br>
-            <p>Indeed, the misalignment of the blue negative was because of noise caused by the borders. Once we cropped the images, the red-green displacement stayed the same, but the red-blue displacement shifted <br>
-                by four pixels. As a result, we now have excellent alignment of the filters. Keeping this in mind, for the rest of the project we will manually crop the borders before running our algorithms.</p>
-
-
-            <h2 id="SingleScaleTest">3. Testing Our Single Scale Alignment Algorithm</h2>
-            <p>Now that we have a working single-scale alignment algorithm, let's see how it performs on some other images that have relatively small filesize. We will use our algorithm on the monastery and <br>
-            tobolsk images. Below is a side-by-side of the negatives, followed by the full-color images aligned by our algorithm.</p>
-            <img src="media/MonasteryTobolskSideBySide.png" alt="Side by Side of negatives for the monastery and tobolsk images">
-            <img src="media/MonasteryTobolskFullColor.png" alt="Full-Color Search Aligned Monastery and Tobolsk images">
-            <p> As we can see, our algorithm performs fantastically on both images. There are no visible alignment issues in either picture.</p>
-
-            <h2 id="ImagePyramids">4. Image Pyramids</h2>
-            <p>While our exhaustive search algorithm works very well for the relatively small pictures, for larger images exhaustive search is prohibitively expensive in runtime. Therefore, we will introduce a<br>
-            new algorithm that uses image pyramids to speed up the process. The image pyramids will store the negatives at many resolutions, from coarse to fine, and this algorithm will perform a single-scale<br>
-            displacement calculation at each layer. At the end, the displacements from each layer will be combined. The speedup from image pyramids should allow us to process the larger .tiff images. </p>
+                <p>Writing the Code:<br>
+                There is a very important subtlety within our exhaustive search criteria. When we assign a score to each displacement, we only want to consider the quality of alignment of the parts that overlap. <br>
+                So the Normalized Cross-Correlation is not computed between the entire images, but rather only the portion of the images that overlapped. Our algorithm will take this into consideration.</p>
+                <p>In order to see our results, we will also write a function to display the aligned images, using the displacement numbers given to us by our search algorithm. This function will not only align<br>
+                the three filters, but it will also crop the images so that only the intersection of the three filters is shown. This allows us to inspect specifically the part of the image that our <br>
+                search algorithm is optimizing. Once all this is done and we run our algorithm, we obtain the following:<br></p>
+                <img src="media/cathedralSearchAlignedUncropped.png" alt="Full Color Cathedral Image, Red and Green Aligned but Blue slightly misaligned"><br>
+                <p>We can now see a drastic improvement in alignment, however there are still clearly issues. There are still blue and yellow outlines where misalignments still exist. We can tell that our <br>
+                    algorithm works because yellow is a combination of red and green, meaning our algorithm worked extremely well for the red and green negatives, but there were issues causing it to<br>
+                    fail when aligning the blue and red negatives.This is most likely because the borders are causing noise for our algorithm. As we can see in the above image, there is a very large blue/black border<br>
+                    on the right that may be the cause of the blue misalignment. For now, we will manually crop off a 10 pixel border on all sides of the negatives and see if this yields an improvement:<br></p>
+                <img src="media/cathedralSearchAlignedCropped.png" alt="Full Color Cathedral Image, Perfectly Aligned, Borders Cropped"><br>
+                <p>Indeed, the misalignment of the blue negative was because of noise caused by the borders. Once we cropped the images, the red-green displacement stayed the same, but the red-blue displacement shifted <br>
+                    by four pixels. As a result, we now have excellent alignment of the filters. Keeping this in mind, for the rest of the project we will manually crop the borders before running our algorithms.</p>
 
 
+                <h2 id="SingleScaleTest">3. Testing Our Single Scale Alignment Algorithm</h2>
+                <p>Now that we have a working single-scale alignment algorithm, let's see how it performs on some other images that have relatively small filesize. We will use our algorithm on the monastery and <br>
+                tobolsk images. Below is a side-by-side of the negatives, followed by the full-color images aligned by our algorithm.</p>
+                <img src="media/MonasteryTobolskSideBySide.png" alt="Side by Side of negatives for the monastery and tobolsk images">
+                <img src="media/MonasteryTobolskFullColor.png" alt="Full-Color Search Aligned Monastery and Tobolsk images">
+                <p> As we can see, our algorithm performs fantastically on both images. There are no visible alignment issues in either picture.</p>
 
+                <h2 id="ImagePyramids">4. Image Pyramids</h2>
+                <p>While our exhaustive search algorithm works very well for the relatively small pictures, for larger images exhaustive search is prohibitively expensive in runtime. Therefore, we will introduce a<br>
+                new algorithm that uses image pyramids to speed up the process. The image pyramids will store the negatives at many resolutions, from coarse to fine, and this algorithm will perform a single-scale<br>
+                displacement calculation at each layer. At the end, the displacements from each layer will be combined. The speedup from image pyramids should allow us to process the larger .tiff images. </p>
 
+                <p>Writing the Code: <br>
+                Once I implemented the image pyramid alignment function pyramidBestDisplacement, it became immediately evident that my bestDisplacement function was too slow. The bestDisplacement function checked <br>
+                alignments by adding different amounts of padding to each image, so that the images have lots of empty data and are displaced. Furthermore the bestDisplacement function could only calculate displacement<br>
+                between two images at a time, so I had to call it twice. With these inefficiencies in mind I created an improved version, bestDisplacement2, that created different displacements by cropping the images <br>
+                leaving only the intersecting area. Furthermore, bestDisplacement2 calculated two displacements at the same time, so I could calculate the green and blue displacements in one function call. This <br>
+                drastically improved the runtime of the single-scale alignment algorithm, and in fact this was all that was needed. I wrote a second version of pyramidBestDisplacement using the improved single-scale<br>
+                alignment and runtimes were generally around 2.5 minutes on each of the large .tif images. I further performed some tweaking with the parameters to determine which parameters would work on most images, and<br>
+                settled on a 5-level image pyramid, with searching displacements between [-4,4] pixels at each scale. These parameters worked fairly well for most of the images. I furthermore introduced a wrapper<br>
+                function to import, crop, and align the images. In this function I set the default cropping to 30 pixels on each edge. A few images had large borders that drastically affected alignment, however, <br>
+                so those images required extra cropping.</p>
 
-            
+                <h2 id="PyramidResults">Results Of Image Pyramid Algorithm</h2>
+                <p>As we can see below, our image pyramid alignment algorithm works very well on most of the example images.</p>
+                <img src="media/EmirAligned.png">
+                <img src="media/ChurchAligned.png">
+                <img src="media/HarvestersAligned.png">
+                <img src="media/IconAligned.png">
+                <img src="media/LadyAligned.png">
+                <img src="media/MelonsAligned.png">
+                <img src="media/SculptureAligned.png">
+                <img src="media/ThreeGenerationsAligned.png">
+                <h2 id="CroppingIssues2">Cropping Issues Again</h2>
+                <p>While the algorithm worked very well for the images above, there were a few images where it clearly had issues. In particular, the Onion Church image, the Self Portrait image, and the Train image <br>
+                had substantial problems aligning. Upon inspection, the problem turned out to be the fairly large borders, which, just like in our single-scale algorithm, was causing problems. For these images<br>
+                I had to manually increase the border cropping. Naturally, I could increase the universal border cropping, but that does cut off some of the picture, so it is preferable to manually tune the few <br>
+                images that have problems. After a simple fix of increasing the border crop, these images also turned out excellently.</p>
+                <h3>Before Cropping Adjustment</h3>
+                <img src="media/OnionChurchAligned.png" style="width:30%;height:auto">
+                <img src="media/SelfPortraitAligned.png" style="width:30%;height:auto">
+                <img src="media/TrainAligned.png" style="width:30%;height:auto">
+                <h3>After Cropping Adjustment</h3>
+                <img src="media/OnionChurchAlignedCrop100.png" style="width:30%;height:auto">
+                <img src="media/SelfPortraitAlignedCrop200.png" style="width:30%;height:auto">
+                <img src="media/TrainAlignedCrop100.png" style="width:30%;height:auto">
+                <p>For the Onion Church Image and Train Image, I adjusted border cropping from 30 pixels to 100 pixels. The Self Portrait Image required a larger adjustment, from 30 pixels to 200 pixels.</p>
+                <h2 id="OtherExamples">Other Examples From The Collection</h2>
+                <p>Below are a few more example pictures I selected from the Prokudin-Gorskii collection. These are the results of running my algorithm on the 30ish MB .tif images.</p>
+                <h3>Camel Carrying Sacks</h3>
+                <img src="media/CamelAligned.png">
+                <h3>Kostroma</h3>
+                <img src="media/KostromaAligned.png">
+                <h3>Railroad Dam</h3>
+                <img src="media/RailroadAligned.png">
+                <h3>Crumbling Mosque</h3>
+                <img src="media/MosqueAligned.png">
+                <h3>Isfandiyar Khan of Khorezm</h3>
+                <img src="media/IsfandiyarAligned.png">
+                <p>Note: this image also required a cropping adjustment, from 30 pixels to 200 pixels.</p>
+                <h2 id="Gallery">Gallery</h2>
+                <p>Below includes all the images from this project, as well as the respective displacements computed by my algorithm. <br>
+                <em>Note: The red negative is the reference, so displacement of the red negative is always (0,0). A displacement of (x,y) refers to <br>
+                a horizontal displacement of x, and a vertical displacement of y. A displacement in the upwards direction is considered a<br>
+                positive y-displacement; a displacement in the leftwards (not rightwards) direction is considered a positive x-displacement.</em></p>
+                <br>
+                <div class="row">
+                    <div class="column">
+                        <h4>Cathedral</h4>
+                        <img src="media/cathedralSearchAlignedCropped.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-1, -7)<br>
+                            Blue: (-3, -12)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Monastery</h4>
+                        <img src="media/MonasteryAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-1, -6)<br>
+                            Blue: (-2, -3)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Tobolsk</h4>
+                        <img src="media/TobolskAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-1, -4)<br>
+                            Blue: (-3, -6)
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h4>Emir</h4>
+                        <img src="media/EmirAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-13, -57)<br>
+                            Blue: (-17, -107)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Church</h4>
+                        <img src="media/ChurchAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (5, -33)<br>
+                            Blue: (5, -57)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Harvesters</h4>
+                        <img src="media/HarvestersAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (3, -65)<br>
+                            Blue: (-8, -124)
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h4>Icon</h4>
+                        <img src="media/IconAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-5, -48)<br>
+                            Blue: (-22, -90)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Lady</h4>
+                        <img src="media/LadyAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (9, -53)<br>
+                            Blue: (16, -111)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Melons</h4>
+                        <img src="media/MelonsAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-3, -96)<br>
+                            Blue: (-8, -179)
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h4>Sculpture</h4>
+                        <img src="media/SculptureAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (16, -107)<br>
+                            Blue: (26, -139)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Three Generations</h4>
+                        <img src="media/ThreeGenerationsAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (0, -57)<br>
+                            Blue: (-7, -111)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Onion Church</h4>
+                        <img src="media/OnionChurchAlignedCrop100.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-10, -57)<br>
+                            Blue: (-35, -108)
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h4>Self Portrait</h4>
+                        <img src="media/SelfPortraitAlignedCrop200.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-8, -98)<br>
+                            Blue: (-36, -176)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Train</h4>
+                        <img src="media/TrainAlignedCrop100.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-26, -43)<br>
+                            Blue: (-29, -88)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Camel (Self Selected)</h4>
+                        <img src="media/CamelAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (14, -53)<br>
+                            Blue: (15, -99)
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h4>Kostroma (Self Selected)</h4>
+                        <img src="media/KostromaAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (-16, -61)<br>
+                            Blue: (-32, -109)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Railroad (Self Selected)</h4>
+                        <img src="media/RailroadAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (8, -68)<br>
+                            Blue: (17, -83)
+                        </p>
+                    </div>
+                    <div class="column">
+                        <h4>Crumbling Mosque (Self Selected)</h4>
+                        <img src="media/MosqueAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (0, -44)<br>
+                            Blue: (-9, -70)
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <h4>Isfandiyar</h4>
+                        <img src="media/IsfandiyarAligned.png" style="width:90%">
+                        <p>Displacements (relative to red, in pixels):<br>
+                            Green: (17, -53)<br>
+                            Blue: (8, -94)
+                        </p>
+                    </div>
+                </div>  
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                
+            </div>
         </div>
-    </div>
+    </body>
 
 
 </html>
