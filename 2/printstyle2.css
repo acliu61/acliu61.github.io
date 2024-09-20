@@ -1,0 +1,63 @@
+body, html, #wrapper {
+    width: 100%;
+    height:100%;
+    margin: 0;
+    padding: 0%;
+}
+
+.sideBar {
+    display:none;
+    height: 100%;
+    width: 12%;
+    position: fixed;
+    background-color: rgba(68, 64, 94, 0.467);
+    color: rgb(0, 0, 0);
+    
+}
+.sideBarInner {
+    display:none;
+    position: relative;
+    padding-top: 20px;
+    padding-left: 10%;
+}
+.mainPortion {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.79);
+    margin-left: 12%;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    height: 100%;
+    width: 88%;
+    overflow:visible;
+}
+.mainText {
+    position: relative;
+    padding-left: 30px;
+    font-size: 1vw;
+}
+
+img {
+    width: 80%;
+    max-width: 800px;
+    height: auto;
+    position: relative;
+    break-before:auto;
+    break-after:auto;
+}
+p{
+    break-before:auto;
+    break-after:auto;
+}
+/* This div code taken from W3Schools CSS tutorial
+https://www.w3schools.com/howto/howto_css_three_columns.asp*/
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .column {
+    width:30%;
+    float: left;
+    padding: 10px;
+  }
