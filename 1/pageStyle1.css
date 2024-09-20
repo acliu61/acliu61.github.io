@@ -57,6 +57,9 @@ https://www.w3schools.com/howto/howto_css_three_columns.asp*/
     padding: 10px;
   }
 
+
+
+
   @media print {
     #content,#page {
         width: 100%; 
@@ -88,14 +91,14 @@ https://www.w3schools.com/howto/howto_css_three_columns.asp*/
     margin-top: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
-    height: 100%;
     width: 88%;
-    overflow-y: scroll;
+    overflow-y: visible;
 }
 .mainText {
     position: relative;
     padding-left: 30px;
     font-size: 1vw;
+    overflow-y:visible;
 }
 
 body {
