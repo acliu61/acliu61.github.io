@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title> Project 4 Report</title>
+        <link rel="stylesheet" href="pageStyle4.css" media="screen">
+        <link rel="stylesheet" href="printStyle4.css" media="print">
+    </head>
+    <body style="width:100%;height:100%">
+        <div class = "sideBar" id = "tableOfContents">
+            <div class = "sideBarInner" id = "tableOfContentsInner">
+                <h2>Jump to Section</h2>
+                <a href="#Introduction"> Introduction</a> <br>
+                <a href="#Shoot the Pictures">Shooting the Pictures</a><br>
+                
+            </div>
+        </div>
+        <div class = "mainPortion" id = "mainSection">
+            <h1 style="margin-left: 25%; font-size: 2vw">Project 4: Image Warping and Mosaic-ing</h1>
+            <div class = "mainText" id = "mainSectionInner">
+                <p style="text-align: center; margin-right:11%">By: Andi Liu</p>
+                <br>
+                <h2 id = "Introduction">1. Introduction</h2>
+                <p>In this project we will be exploring different aspects of image warping with the ultimate goal of image mosaic-ing. For each mosaic, we will take at least two <br>
+                photographs and register, projective warp, resample, and composite them into mosaics. We will also learn to compute and use homographies to warp images.</p>
+                <p>Writing the code: We will be re-using some of the basic functions written in the previous projects, for importing, displaying, and saving images. These will be<br>
+                stored and imported in my utils.py file. We will also be using a significant portion of code from project 3, used for warping and interpolation. These functions will<br>
+                also be defined in the utils.py file.</p>
+                
+                <h2 id="Shoot the Pictures">Shooting the Pictures</h2>
+                <p>To begin with our project, we will need to procure our images. For each mosaic, the set of images need to be related by projective (perspective) transforms.<br>
+                We will obtain these by fixing the center of projection and rotating our camera.
+                </p>
+                
+                <br>
+
+
+                In this project we will be morphing faces (my face) into someone else's face, and we will use the IMM Face Dataset to compute a mean face and extrapolate from<br>
+                the mean face to create a caricature of myself. To do the morph, we will need to simultaneously warp the facial shape and cross-dissolve the image colors. We will<br>
+                control the warp by using a correspondence map that is situated manually, requiring user input to align the eyes, mouth, chin, ears, etc to obtain a smooth transformation.<br>
+                <p>We will start with importing the image we will use throughout this project, which is my student ID image, taken over 3 years ago.</p>
+                <img src="media/portrait.jpg" alt="my ID image" style="height:12%; width:12%">                
+                <p>Writing the Code: Having used a variety of common functions in projects 1 and 2, I have decided to create a utils.py file for this and future projects.<br>
+                This file will contain some useful functions for tasks such as importing images, displaying images, and saving images, among others.<br>
+                I will add to this file throughout the semester.</p>
+
+                <h2 id="Correspondences">2. Defining Correspondences</h2>
+                <p>The target face we will map my face onto is that of Rowan Atkinson, acting as Mr. Bean. We import the target image as well:</p>
+                <img src="media/mrbean.jpg" alt="Mr. Bean's Face" style="height:15%; width:15%">
+                <p>The first task we need to complete for our goal is to define pairs of corresponding points on the two faces. However, to do this we need both images to be the<br>
+                same size and shape. The image of my face is 600 by 800 pixels (the standard student ID dimensions) and the image of Mr. Bean's face is 474 by 474 pixels. <br>
+                This is a mismatch that needs to be fixed. Also, for better alignment we need to crop the Mr. Bean photo to just the head and the shoulders, to better match the ID photo.<br>
+                After cropping Mr. Bean to a nice round 300 by 400 pixels, we can simply downsample the ID image using sci-kit image's resize function to transform both images to <br>
+                the same size and shape. The transformed images are shown below.</p>
+                <img src="media/IDbeansidebyside.png" alt="ID image downsampled and Mr Bean Cropped", style="height:15%;width:30%">
+                <p>Now that the images are the same size and shape, we can go ahead and label the correspondences. For finding the corresponding points on both images I used the <br>
+                labeling tool created by last year's student. This tool helped me click on points in both images that corresponded to one another and saved them as a json object.<br>
+                The correspondences are depicted as points in the images below. For labeling purposes, the ID image will be image 1 and the Mr Bean picture will be image 2.</p>
+                <img src="media/correspondences.png" alt="Side by Side Image with corresponding points depicted">
+
+
+
+                
+            </div>
+        </div>
+    </body>
+
+
+</html>
