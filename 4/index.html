@@ -11,6 +11,9 @@
                 <h2>Jump to Section</h2>
                 <a href="#Introduction"> Introduction</a> <br>
                 <a href="#Shoot the Pictures">Shooting the Pictures</a><br>
+                <a href="#Homography">Compute Homographies</a>
+                <a href="#Rectification">Image Rectification</a>
+                <a href="#Mosaics">Assemble Mosaics</a>
                 
             </div>
         </div>
@@ -23,39 +26,53 @@
                 <p>In this project we will be exploring different aspects of image warping with the ultimate goal of image mosaic-ing. For each mosaic, we will take at least two <br>
                 photographs and register, projective warp, resample, and composite them into mosaics. We will also learn to compute and use homographies to warp images.</p>
                 <p>Writing the code: We will be re-using some of the basic functions written in the previous projects, for importing, displaying, and saving images. These will be<br>
-                stored and imported in my utils.py file. We will also be using a significant portion of code from project 3, used for warping and interpolation. These functions will<br>
+                stored and imported in my utils.py file. We will also be using some functions from project 3 that we used for defining point correspondences between images. These functions will<br>
                 also be defined in the utils.py file.</p>
                 
                 <h2 id="Shoot the Pictures">Shooting the Pictures</h2>
                 <p>To begin with our project, we will need to procure our images. For each mosaic, the set of images need to be related by projective (perspective) transforms.<br>
                 We will obtain these by fixing the center of projection and rotating our camera.
                 </p>
-                
-                <br>
+                <p>Below is the first set of images that we will be using for this project</p>
+                <img src="media/mosaic1source.png"><br>
+                <p>We will be warping the second image to be in the same plane as the first. In order to do this we first need to label point correspondences between the images.<br>
+                We will use the tool we wrote in project 3 for this, and obtain the point correspondences depicted below:</p>
+                <img src="media/mosaic1simplecorrespondences.png"><br>
+                <h2 id="Homography">Compute The Homographies</h2>
+                <p>Since the images are related by a projective transform (a homography), we will need to figure out what the homography is. We reason out the mathematics needed<br>
+                in order to compute the homography. (taken from the jupyter notebook I wrote my code on)</p>
+                <img src="media/reasoning1.jpg"><br>
+                <img src="media/reasoning2.jpg"><br>
+                <p>Now that we've written a function for computing homographies, we can write a function using our inverse warping process from project 3, that warps one image<br>
+                into the plane of another through a computed homography. Putting our second image through this function we obtain the following warped image, displayed next to the original.</p>
+                <img src="media/warpsidebyside1.png"><br>
+                <p>Here is the warped image next to the other image in the mosaic:</p>
+                <img src="media/mosaic1afterwarp.png"><br>
+                <p>We can see that the angle of the warped image seems slightly misaligned from the other. This is because we used only four points of correspondence and the<br>
+                homography is determined by eight values, meaning our points uniquely determine a homography. We can improve the alignment by labelling more points of correspondence<br>
+                and using least squares to compute a homography that most closely aligns with all of them. After modifying our homography function to handle more than 4 points and<br>
+                recomputing the warp we get a much better result</p>
+                <img src="media/mosaic1morecorrespondences.png"><br>
+                <img src="media/warpsidebyside1new.png"><br>
+                <img src="media/mosaic1afterwarpnew.png"><br>
+                <p>Now the building in the warped image looks very closely aligned with the building in the first image.</p>
+                <h2 id="Rectification">Image Rectification</h2>
+                <p>Now that we've confirmed out function can warp images using homographies, we'll put it to the test by warping some other images. To demonstrate the capabilities<br>
+                we will choose some features of images that we know to be flat, and warp them so that we appear to be looking at it. Below we show the feature used to compute the homography<br>
+                as well as the rectified image.</p>
+                <img src="media/rect1points.png" style="height:15%;width:15%"><img src="media/rectification1.png" style="height:15%;width:15%"><br>
+                <img src="media/rect2points.png" style="height:15%;width:15%"><img src="media/rectification12.png" style="height:15%;width:15%"><br>
+                <img src="media/rect3points.png" style="height:15%;width:15%"><img src="media/rectification21.png" style="height:15%;width:15%"><br>
+                <h2 id="Mosaics">Assembling Mosaics</h2>
+                <p>Now that we are able to warp images into other image's planes, we can put warped images together to create mosaics. After writing a function that overlays one image<br>
+                onto the other and averages their intersection, we can create some simple mosaics. Below are some mosaics along with their original images:</p>
+                <img src="media/mosaic1source.png"><br>
+                <img src="media/mosaic1.png"><br>
+                <img src="media/mosaic2sidebyside.png"><br>
+                <img src="media/mosaic2.png"><br>
+                <img src="media/mosaic3sidebyside.png"><br>
+                <img src="media/mosaic3.png"><br>
 
-
-                In this project we will be morphing faces (my face) into someone else's face, and we will use the IMM Face Dataset to compute a mean face and extrapolate from<br>
-                the mean face to create a caricature of myself. To do the morph, we will need to simultaneously warp the facial shape and cross-dissolve the image colors. We will<br>
-                control the warp by using a correspondence map that is situated manually, requiring user input to align the eyes, mouth, chin, ears, etc to obtain a smooth transformation.<br>
-                <p>We will start with importing the image we will use throughout this project, which is my student ID image, taken over 3 years ago.</p>
-                <img src="media/portrait.jpg" alt="my ID image" style="height:12%; width:12%">                
-                <p>Writing the Code: Having used a variety of common functions in projects 1 and 2, I have decided to create a utils.py file for this and future projects.<br>
-                This file will contain some useful functions for tasks such as importing images, displaying images, and saving images, among others.<br>
-                I will add to this file throughout the semester.</p>
-
-                <h2 id="Correspondences">2. Defining Correspondences</h2>
-                <p>The target face we will map my face onto is that of Rowan Atkinson, acting as Mr. Bean. We import the target image as well:</p>
-                <img src="media/mrbean.jpg" alt="Mr. Bean's Face" style="height:15%; width:15%">
-                <p>The first task we need to complete for our goal is to define pairs of corresponding points on the two faces. However, to do this we need both images to be the<br>
-                same size and shape. The image of my face is 600 by 800 pixels (the standard student ID dimensions) and the image of Mr. Bean's face is 474 by 474 pixels. <br>
-                This is a mismatch that needs to be fixed. Also, for better alignment we need to crop the Mr. Bean photo to just the head and the shoulders, to better match the ID photo.<br>
-                After cropping Mr. Bean to a nice round 300 by 400 pixels, we can simply downsample the ID image using sci-kit image's resize function to transform both images to <br>
-                the same size and shape. The transformed images are shown below.</p>
-                <img src="media/IDbeansidebyside.png" alt="ID image downsampled and Mr Bean Cropped", style="height:15%;width:30%">
-                <p>Now that the images are the same size and shape, we can go ahead and label the correspondences. For finding the corresponding points on both images I used the <br>
-                labeling tool created by last year's student. This tool helped me click on points in both images that corresponded to one another and saved them as a json object.<br>
-                The correspondences are depicted as points in the images below. For labeling purposes, the ID image will be image 1 and the Mr Bean picture will be image 2.</p>
-                <img src="media/correspondences.png" alt="Side by Side Image with corresponding points depicted">
 
 
 
