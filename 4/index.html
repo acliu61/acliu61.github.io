@@ -11,9 +11,14 @@
                 <h2>Jump to Section</h2>
                 <a href="#Introduction"> Introduction</a> <br>
                 <a href="#Shoot the Pictures">Shooting the Pictures</a><br>
-                <a href="#Homography">Compute Homographies</a>
-                <a href="#Rectification">Image Rectification</a>
-                <a href="#Mosaics">Assemble Mosaics</a>
+                <a href="#Homography">Compute Homographies</a><br>
+                <a href="#Rectification">Image Rectification</a><br>
+                <a href="#Mosaics">Assemble Mosaics</a><br>
+                <a href="#Part 2">Part 2</a><br>
+                <a href="#Harris Points">Harris Points</a><br>
+                <a href="#ANMS">ANMS</a><br>
+                <a href="#Feature Descriptors">Feature Descriptors</a><br>
+                <a href="#Feature Matching">Feature Matching</a><br>
                 
             </div>
         </div>
@@ -72,6 +77,70 @@
                 <img src="media/mosaic2.png"><br>
                 <img src="media/mosaic3sidebyside.png"><br>
                 <img src="media/mosaic3.png"><br>
+
+                <h1 id="Part 2">Part 2: Feature Matching for AutoStitching</h1>
+                <h2>Introduction</h2>
+                <p>For the next part of the project we will be implementing feature detection and extraction for the purposes of matching. In order to do this we will implement the <br>
+                process described in the paper  “Multi-Image Matching using Multi-Scale Oriented Patches” by Brown et al. We will use an image with particularly evident features, which
+                will make it evident whether or not our code is working. The chosen image is a bunch of differently shaped rubix cubes.</p>
+                <img src="media/Rubiks-Cube-Collection.jfif"><br>
+                <h2 id="Harris Points">Finding Harris Points</h2>
+                <p>The first thing we will implement from the paper is the Harris Corner detector. In order to find Harris corners, we first need to take the x and y spacial derivatives<br>
+                Then we join them together to form a column gradient vector, and take the outer product of the gradient with itself. This matrix is then used to calculate the Harris values<br>
+                througout the image. We do this by looking at the ratio of the determinants of this matrix to the trace of the matrix. If the H value is large, this tells us that the image<br>
+                is changing significantly in both x and y directions at a certain point, meaning that it is highly distinguishable (a Harris corner). Below we depict all the Harris points<br>
+                our algorithm detects on our image, both with and without the image in the background.</p>
+                <img src="media/harrispointsNoBack.png" style="height:50%;width:50%">
+                <img src="media/harrispointsWithBack.png" style="height:50%;width:50%"><br>
+                <h2 id="ANMS">Adaptive Non-maximal Supression (ANMS)</h2>
+                <p>Since our Harris point detector clearly picked up too many points, we want to suppress non-maximum points where there is dense packing, while keeping points that are detected<br>
+                in sparse areas. For this we will use Adaptive Non-Maximal Suppression, a technique described in the paper wherein points are "suppressed" if there is a more "edge-like" point <br>
+                nearby, leaving only the most edge-like points in densely populated areas without filtering out points in sparse areas. After implementing this algorithm, we observe the top 50,<br>
+                150, and 300 points chosen by Adaptive Non-Maximal Suppression. </p>
+                <img src="media/ANMS50.png"><br>
+                <img src="media/ANMS150.png"><br>
+                <img src="media/ANMS300.png"><br>
+                <h2 id="Feature Descriptors">Feature Descriptors</h2>
+                <p>Now that we have the locations of distinct features, we still need a way to label the features. In order to do this, Brown et al. use gradient-aligned patches that are local<br>
+                to the image. We will do the same. The first step is to find the gradient and the gradient-orthogonal at each point of interest. When we do this, we convolve the image with a 2D<br>
+                Gaussian in order to smooth out the gradient surface, so that there is less variability with feature location. Below we show the 50 ANMS points along with the computed gradients<br>
+                and orthogonals.</p>
+                <img src="media/GradOrth50.png"><br>
+                <p>After computing the gradient and orthogonal, we will extract a chunk of the local image large enough to rotate and align with the gradient, and then Gaussian blur by a factor of 5<br>
+                and finally sample the 9 by 9 patch of pixels around our location of interest. We show some original extracted image patches below, followed by 50 examples of image patches before and<br>
+                after gradient-alignment, gaussian blurring, and then sampling.</p>
+                <img src="media/GradOrthLocal.png"><br>
+                <img src="media/descriptors.png"><br>
+                <img src="media/descriptorsFinal.png"><br>
+                <h2 id="Feature Matching">Feature Matching</h2>
+                <p>Now that we are able to extract features out of our images, all that remains to do is to match them between images. For this purpose we will use the two images from our first mosaic.<br>
+                After running our images through the feature extractor we get the following for the first image:</p>
+                <img src="media/img1Harris.jpg">
+                <img src="media/img1ANMS.jpg">
+                <img src="media/img1descriptors.jpg">
+                <img src="media/img1descriptorsBlurred.jpg">
+                <p>And for the second image we get the following features:</p>
+                <img src="media/img2Harris.jpg">
+                <img src="media/img2ANMS.jpg">
+                <img src="media/img2descriptors.jpg">
+                <img src="media/img2descriptorsBlurred.jpg">
+                <p>Now, for the matching algorithm we will simply use normalized cross-correlation, however as the paper suggests we will use the Lowe method, which is to only classify two features as<br>
+                a match if the correlation between the second closest match is a certain threshold below the correlation betweeen the image and the closest match. We see that this gives us very good results.<br>
+                Depicted below are a few pairs of matches out of 700 points selected out of the ANMS algorithm.</p>
+                <img src="media/match0.png">
+                <img src="media/match1.png">
+                <img src="media/match2.png">
+                <img src="media/match3.png">
+                <img src="media/match4.png">
+                <img src="media/match5.png">
+                <img src="media/match6.png">
+                <img src="media/match7.png">
+                <img src="media/match8.png">
+                <img src="media/match9.png">
+                <img src="media/match10.png">
+                <img src="media/match11.png">
+                <p>We can see that the results we get are quite good.</p>
+
 
 
 
